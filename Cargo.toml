@@ -1,0 +1,20 @@
+[package]
+name = "tower-examples"
+version = "0.1.0"
+authors = ["Carl Lerche <me@carllerche.com>"]
+edition = "2018"
+
+[[bin]]
+name = "http-client"
+path = "src/http-client.rs"
+
+[[bin]]
+name = "http-server"
+path = "src/http-server.rs"
+
+[dependencies]
+futures = "0.1.26"
+hyper = "0.12.27"
+tokio = "0.1.19"
+tower = { git = "https://github.com/tower-rs/tower" }
+tower-hyper = { git = "https://github.com/tower-rs/tower-hyper" }
