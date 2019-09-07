@@ -27,16 +27,16 @@ fn request() -> impl Future<Item = Response<hyper::Body>, Error = ()> {
     // Now, to build the service! We use two BufferLayers in order to:
     // - provide backpressure for the RateLimitLayer, and ConcurrencyLimitLayer
     // - ..and to provide cheap clones on the service.
-    let maker = ServiceBuilder::new()
+    let service = ServiceBuilder::new()
         .buffer(5)
         .rate_limit(5, Duration::from_secs(1))
         .concurrency_limit(5)
         .buffer(5)
         .service(hyper);
 
-    // `Reconnect` accepts a destination and a MakeService, creating a new service
+    // `Reconnect` accepts a destination and a Service, creating a new service
     // any time the connection encounters an error.
-    let client = Reconnect::new(maker, dst);
+    let client = Reconnect::new(service, dst);
 
     let request = Request::builder()
         .method("GET")
