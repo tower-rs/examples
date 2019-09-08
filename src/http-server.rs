@@ -35,7 +35,7 @@ fn main() {
 
 struct Svc;
 impl Service<Request<Body>> for Svc {
-    type Response = Response<&'static str>;
+    type Response = Response<Body>;
     type Error = hyper::Error;
     type Future = future::FutureResult<Self::Response, Self::Error>;
 
@@ -44,7 +44,7 @@ impl Service<Request<Body>> for Svc {
     }
 
     fn call(&mut self, _req: Request<Body>) -> Self::Future {
-        let res = Response::new("Hello World!");
+        let res = Response::new(Body::from("Hello World!"));
         future::ok(res)
     }
 }
