@@ -2,7 +2,7 @@ use futures::{future, Future, Poll, Stream};
 use hyper::{self, Body, Request, Response};
 use tokio::net::TcpListener;
 use tower::{builder::ServiceBuilder, Service};
-use tower_hyper::{body::LiftBody, server::Server};
+use tower_hyper::server::Server;
 
 fn main() {
     hyper::rt::run(future::lazy(|| {
@@ -11,10 +11,7 @@ fn main() {
 
         println!("Listening on http://{}", addr);
 
-        let maker = ServiceBuilder::new()
-            .concurrency_limit(5)
-            .make_service(MakeSvc);
-
+        let maker = ServiceBuilder::new().concurrency_limit(5).service(MakeSvc);
         let server = Server::new(maker);
 
         bind.incoming()
@@ -37,8 +34,8 @@ fn main() {
 }
 
 struct Svc;
-impl Service<Request<LiftBody<Body>>> for Svc {
-    type Response = Response<&'static str>;
+impl Service<Request<Body>> for Svc {
+    type Response = Response<Body>;
     type Error = hyper::Error;
     type Future = future::FutureResult<Self::Response, Self::Error>;
 
@@ -46,8 +43,8 @@ impl Service<Request<LiftBody<Body>>> for Svc {
         Ok(().into())
     }
 
-    fn call(&mut self, _req: Request<LiftBody<Body>>) -> Self::Future {
-        let res = Response::new("Hello World!");
+    fn call(&mut self, _req: Request<Body>) -> Self::Future {
+        let res = Response::new(Body::from("Hello World!"));
         future::ok(res)
     }
 }

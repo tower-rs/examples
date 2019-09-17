@@ -18,3 +18,4 @@ hyper = "0.12.27"
 tokio = "0.1.19"
 tower = { git = "https://github.com/tower-rs/tower" }
 tower-hyper = { git = "https://github.com/tower-rs/tower-hyper" }
+tower-reconnect = { git = "https://github.com/tower-rs/tower" }
